@@ -1,4 +1,3 @@
-# test.py
 import numpy as np
 import casadi as ca
 
@@ -15,14 +14,14 @@ def build_problem():
     ])
     q = np.array([1.0, -2.0, 1.0, 2.0])
 
-    # Equality: A_eq x = b_eq
+    # A_eq x = b_eq
     A_eq = np.array([
         [1.0, 1.0,  0.0, 0.0],
         [1.0, 0.0, -1.0, 0.0],
     ])
     b_eq = np.array([8.0, -7.0])
 
-    # Inequality: G_ineq x <= h_ineq
+    # G_ineq x <= h_ineq
     G = np.array([
         [ 1.0, 0.0, 0.0, 0.0],  #  x1 <= 15.5
         [-1.0, 0.0, 0.0, 0.0],  # -x1 <= -15  => x1 >= 15
@@ -30,7 +29,7 @@ def build_problem():
     ])
     h = np.array([15.5, -15.0, 15.0])
 
-    # OSQP form: l <= A x <= u
+    # l <= A x <= u
     A = np.vstack([A_eq, G])
     l = np.concatenate([b_eq, np.full(h.shape, -np.inf)])
     u = np.concatenate([b_eq, h])
@@ -73,7 +72,7 @@ def benchmark_once(verbose_iterations: bool = True):
         alpha=1.78,
         max_iter=5000,
         eps_abs=1e-8,
-        verbose=verbose_iterations,   # True => prints every iteration line
+        verbose=verbose_iterations,
         log_every=1,
         store_history=True,
     )
@@ -107,8 +106,8 @@ def alpha_sweep():
             alpha=float(a),
             max_iter=5000,
             eps_abs=1e-8,
-            verbose=False,        # sweep prints summary only
-            store_history=False,  # keep sweep lightweight
+            verbose=False,
+            store_history=False,
         )
 
         _, _, _, info = solve_with_simple_osqp(P, q, A, l, u, settings)
@@ -119,8 +118,5 @@ def alpha_sweep():
 
 
 if __name__ == "__main__":
-    # 1) One run (prints all iterations if verbose_iterations=True)
     benchmark_once(verbose_iterations=True)
-
-    # 2) Alpha sweep: alpha in [1.5, 1.9] step 0.05
     alpha_sweep()
