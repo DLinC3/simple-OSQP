@@ -1,4 +1,3 @@
-# simple_osqp.py
 import numpy as np
 import scipy.sparse as spa
 import scipy.sparse.linalg as spla
@@ -13,10 +12,10 @@ class OSQPSettings:
     alpha: float = 1.6                # 1 < alpha < 2
     max_iter: int = 10000
     eps_abs: float = 1e-12
-    eps_rel: float = 1e-4             # kept (not used), for future extension
+    eps_rel: float = 1e-4             # not used), for future extension
     verbose: bool = False
-    log_every: int = 1                # print every iteration when verbose=True
-    store_history: bool = True        # store all iterations (residuals, etc.)
+    log_every: int = 1               
+    store_history: bool = True       
 
 
 class SimpleOSQP:
@@ -59,10 +58,8 @@ class SimpleOSQP:
         # Linear solver cache
         self._kkt_solver: Optional[spla.SuperLU] = None
 
-        # Iteration log (optional)
+        # log
         self.history: List[Dict[str, Any]] = []
-
-    # core algebra 
 
     def setup(self) -> None:
         """
@@ -88,7 +85,6 @@ class SimpleOSQP:
         """Projection onto C = { z | l <= z <= u }."""
         return np.clip(z_in, self.l, self.u)
 
-    # diagnostics
 
     def _residuals_inf(self) -> (float, float):
         """
